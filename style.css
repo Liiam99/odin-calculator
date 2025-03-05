@@ -36,7 +36,7 @@ body {
 }
 
 .left-buttons {
-    flex: auto;
+    flex: 2 1 auto;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -49,8 +49,10 @@ body {
 }
 
 .button-row button {
-    flex: auto;
+    flex: 1;
     font-size: 24px;
+    padding: 0px;
+    border: 0px;
 }
 
 .right-buttons {
