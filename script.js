@@ -1,12 +1,27 @@
 (() => {
-    const leftOperand = null;
-    const operator = null;
-    const rightOperand = null;
+    let leftOperand = null;
+    let operator = null;
+    let rightOperand = null;
+
+    const expression = [leftOperand, operator, rightOperand];
+
+    const display = document.querySelector('.display')
 
     const clearBtn = document.querySelector('.clear')
-    const display = document.querySelector('.display')
-    clearBtn = clearBtn.addEventListener('click', () => display.textContent = '');
+    clearBtn.addEventListener('click', () => display.textContent = '');
+
+    setupOperatorButtons(expression);
 })();
+
+
+function setupOperatorButtons(expression) {
+    const operatorBtns = document.querySelectorAll('.operator');
+    operatorBtns.forEach((operatorBtn) => {
+        operatorBtn.addEventListener('click', (e) => {
+            expression[1] = e.target.textContent;
+        });
+    });
+}
 
 
 function operate(leftOperand, operator, rightOperand) {

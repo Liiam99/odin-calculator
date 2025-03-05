@@ -24,7 +24,7 @@ body {
     flex: 1 0 0;
     border: 1px solid black;
     margin-bottom: 30px;
-    text-align: center;
+    text-align: end;
     align-content: center;
     font-size: 90px;
 }
