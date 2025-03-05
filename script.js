@@ -2,6 +2,10 @@
     const leftOperand = null;
     const operator = null;
     const rightOperand = null;
+
+    const clearBtn = document.querySelector('.clear')
+    const display = document.querySelector('.display')
+    clearBtn = clearBtn.addEventListener('click', () => display.textContent = '');
 })();
 
 
