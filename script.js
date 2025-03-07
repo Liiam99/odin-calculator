@@ -68,6 +68,12 @@ function updateDisplay(content) {
 
     const display = document.querySelector('.display');
 
+    if (!isFinite(content)) {
+        display.textContent = 'no no no'
+
+        return 0;
+    }
+
     if (display.textContent === '0' && content !== '.') {
         display.textContent = content;
 
