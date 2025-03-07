@@ -57,6 +57,12 @@ function updateDisplay(value) {
     const display = document.querySelector('.display');
     const MAX_LENGTH = 9;
 
+    if (display.textContent === '0' && value !== '.') {
+        display.textContent = value;
+
+        return value;
+    }
+
     if (display.textContent.length < MAX_LENGTH) {
         display.textContent += value;
     }
