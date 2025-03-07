@@ -1,26 +1,36 @@
 (() => {
-    let leftOperand = null;
-    let operator = null;
-    let rightOperand = null;
+    const expression = {
+        leftOperand: null,
+        operator: null,
+        rightOperand: null,
+    };
 
-    const expression = [leftOperand, operator, rightOperand];
+    const leftButtons = document.querySelector('.left-buttons');
+    leftButtons.addEventListener('click', (e) => {
+        if (e.target.matches('.operand')) {
+            const digit = e.target.textContent;
+            const displayValue = updateDisplay(digit);
+        }
+    });
 
-    const display = document.querySelector('.display')
-
-    const clearBtn = document.querySelector('.clear')
-    clearBtn.addEventListener('click', () => display.textContent = '');
-
-    setupOperatorButtons(expression);
+    const rightButtons = document.querySelector('.right-buttons');
+    rightButtons.addEventListener('click', (e) => {
+        if (e.target.matches('.operator')) {
+            expression.operator = e.target.textContent;
+        }
+    });
 })();
 
 
-function setupOperatorButtons(expression) {
-    const operatorBtns = document.querySelectorAll('.operator');
-    operatorBtns.forEach((operatorBtn) => {
-        operatorBtn.addEventListener('click', (e) => {
-            expression[1] = e.target.textContent;
-        });
-    });
+function updateDisplay(number) {
+    const display = document.querySelector('.display');
+    const MAX_LENGTH = 9;
+
+    if (display.textContent.length < MAX_LENGTH) {
+        display.textContent += number;
+    }
+
+    return +display.textContent;
 }
 
 

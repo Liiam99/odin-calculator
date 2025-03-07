@@ -14,9 +14,9 @@ body {
     border: 3px solid black;
     display: flex;
     flex-direction: column;
-    height: 800px;
+    height: 700px;
     margin: auto;
-    width: 600px;
+    width: 500px;
     padding: 40px;
 }
 
@@ -26,7 +26,7 @@ body {
     margin-bottom: 30px;
     text-align: end;
     align-content: center;
-    font-size: 90px;
+    font-size: 80px;
 }
 
 .buttons {
