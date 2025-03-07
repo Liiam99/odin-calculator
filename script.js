@@ -53,21 +53,40 @@
 })();
 
 
-function updateDisplay(value) {
+function updateDisplay(content) {
+    if (typeof content === 'number') {
+        content = content.toString();
+    }
+
     const display = document.querySelector('.display');
-    const MAX_LENGTH = 9;
 
-    if (display.textContent === '0' && value !== '.') {
-        display.textContent = value;
+    if (display.textContent === '0' && content !== '.') {
+        display.textContent = content;
 
-        return value;
+        return +content;
     }
 
-    if (display.textContent.length < MAX_LENGTH) {
-        display.textContent += value;
+    const MAX_VALUE = 999999999;
+    const MAX_LENGTH = MAX_VALUE.toString().length;
+
+    let newDisplayContent = display.textContent + content;
+    if (newDisplayContent.length <= MAX_LENGTH) {
+        display.textContent = newDisplayContent;
+    } else if (content.length > 1) {
+        if (content.includes('.')) {
+            display.textContent = formatFloatString(content, MAX_LENGTH);
+        }
     }
 
-    return +display.textContent;
+    return +newDisplayContent;
+}
+
+
+function formatFloatString(floatString, maxLength) {
+    const dotPos = floatString.indexOf('.') + 1
+    const fracLength = maxLength - dotPos;
+
+    return (+floatString).toFixed(fracLength);
 }
 
 
