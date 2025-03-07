@@ -8,15 +8,34 @@
     const leftButtons = document.querySelector('.left-buttons');
     leftButtons.addEventListener('click', (e) => {
         if (e.target.matches('.operand')) {
+            if (expression.operator && !expression.rightOperand) {
+                clearDisplay();
+            }
+
             const digit = e.target.textContent;
             const displayValue = updateDisplay(digit);
+
+            if (expression.operator) {
+                expression.rightOperand = displayValue;
+            } else {
+                expression.leftOperand = displayValue;
+            }
         }
     });
 
     const rightButtons = document.querySelector('.right-buttons');
     rightButtons.addEventListener('click', (e) => {
         if (e.target.matches('.operator')) {
-            expression.operator = e.target.textContent;
+            if (expression.operator && expression.leftOperand && expression.rightOperand) {
+                const result = operate(...Object.values(expression));
+                clearDisplay();
+                const displayValue = updateDisplay(result);
+                expression.leftOperand = displayValue;
+            }
+
+            if (!e.target.matches('.equal')) {
+                expression.operator = e.target.textContent;
+            }
         }
     });
 })();
@@ -31,6 +50,12 @@ function updateDisplay(number) {
     }
 
     return +display.textContent;
+}
+
+
+function clearDisplay() {
+    const display = document.querySelector('.display');
+    display.textContent = '';
 }
 
 
