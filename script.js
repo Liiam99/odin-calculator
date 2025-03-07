@@ -49,6 +49,14 @@
                 expression.operator = e.target.textContent;
             }
         }
+
+        // Clears calculator.
+        if (e.target.matches('.clear')) {
+            expression.leftOperand = null;
+            expression.operator = null;
+            expression.rightOperand = null;
+            clearDisplay();
+        }
     });
 })();
 
@@ -68,11 +76,12 @@ function updateDisplay(content) {
 
     const MAX_VALUE = 999999999;
     const MAX_LENGTH = MAX_VALUE.toString().length;
-
     let newDisplayContent = display.textContent + content;
+
     if (newDisplayContent.length <= MAX_LENGTH) {
         display.textContent = newDisplayContent;
     } else if (content.length > 1) {
+        // Formats overflowing floats.
         if (content.includes('.')) {
             display.textContent = formatFloatString(content, MAX_LENGTH);
         }
