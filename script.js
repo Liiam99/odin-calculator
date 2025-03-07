@@ -8,8 +8,12 @@
     const leftButtons = document.querySelector('.left-buttons');
     leftButtons.addEventListener('click', (e) => {
         if (e.target.matches('.operand')) {
-            if (expression.operator && !expression.rightOperand) {
+            if ((expression.operator && expression.rightOperand === null)) {
                 clearDisplay();
+
+                if (expression.operator === '=') {
+                    expression.operator = null;
+                }
             }
 
             const digit = e.target.textContent;
@@ -26,11 +30,19 @@
     const rightButtons = document.querySelector('.right-buttons');
     rightButtons.addEventListener('click', (e) => {
         if (e.target.matches('.operator')) {
-            if (expression.operator && expression.leftOperand && expression.rightOperand) {
+            if (expression.leftOperand !== null &&
+                expression.operator !== null &&
+                expression.rightOperand !== null) {
                 const result = operate(...Object.values(expression));
                 clearDisplay();
                 const displayValue = updateDisplay(result);
+
                 expression.leftOperand = displayValue;
+                expression.rightOperand = null;
+
+                if (e.target.matches('.equal')) {
+                    expression.operator = '=';
+                }
             }
 
             if (!e.target.matches('.equal')) {
@@ -41,12 +53,12 @@
 })();
 
 
-function updateDisplay(number) {
+function updateDisplay(value) {
     const display = document.querySelector('.display');
     const MAX_LENGTH = 9;
 
     if (display.textContent.length < MAX_LENGTH) {
-        display.textContent += number;
+        display.textContent += value;
     }
 
     return +display.textContent;
