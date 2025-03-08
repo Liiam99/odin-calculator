@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
 *,
 *::before,
 *::after {
@@ -8,6 +10,7 @@ body {
     display: flex;
     height: 100vh;
     margin: 0;
+    font-family: 'Roboto', sans-serif;
 }
 
 .calculator {
@@ -60,4 +63,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+
+.operator:not(.equal):focus {
+    background-color: aqua;
 }
