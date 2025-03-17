@@ -49,10 +49,13 @@
                 if (e.target.matches('.equal')) {
                     expression.operator = '=';
                 }
+
+                switchOnDotButton();
             }
 
             if (!e.target.matches('.equal')) {
                 expression.operator = e.target.textContent;
+                switchOnDotButton();
             }
         }
 
@@ -61,11 +64,22 @@
             expression.leftOperand = 0;
             expression.operator = null;
             expression.rightOperand = null;
+
             clearDisplay();
             updateDisplay(expression.leftOperand);
+            switchOnDotButton();
         }
     });
+
+    const dotBtn = document.querySelector('.dot')
+    dotBtn.addEventListener('click', (e) => e.target.disabled = true);
 })();
+
+
+function switchOnDotButton() {
+    const dotBtn = document.querySelector('.dot')
+    dotBtn.disabled = false;
+}
 
 
 function updateDisplay(content) {
@@ -75,7 +89,7 @@ function updateDisplay(content) {
 
     const display = document.querySelector('.display');
 
-    if (!isFinite(content)) {
+    if (!isFinite(content) && content !== '.') {
         display.textContent = 'no no no';
 
         return 0;
@@ -102,7 +116,7 @@ function updateDisplay(content) {
         } else if (+newDisplayContent > MAX_VALUE ||
                    +newDisplayContent < -MAX_VALUE/10) {
             newDisplayContent = (+newDisplayContent).toExponential(MAX_LENGTH - 6);
-        } else if (newDisplayContent.includes('.')) {
+        } else if (content.includes('.') && content !== '.') {
             newDisplayContent = formatFloatString(content, MAX_LENGTH);
         }
     }
@@ -117,7 +131,11 @@ function formatFloatString(floatString, maxLength) {
     const dotPos = floatString.indexOf('.') + 1;
     const fracLength = maxLength - dotPos;
 
-    return (+floatString).toFixed(fracLength);
+    // Trims overflowing decimals and trailing zeroes.
+    let formattedFloatString = (+floatString).toFixed(fracLength);
+    formattedFloatString *= 1;
+
+    return formattedFloatString;
 }
 
 
