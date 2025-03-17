@@ -11,14 +11,16 @@
     const leftButtons = document.querySelector('.left-buttons');
     leftButtons.addEventListener('click', (e) => {
         if (e.target.matches('.operand')) {
-            operandHandler(e, expression);
+            const operand = e.target.textContent;
+            operandHandler(operand, expression);
         }
     });
 
     const rightButtons = document.querySelector('.right-buttons');
     rightButtons.addEventListener('click', (e) => {
         if (e.target.matches('.operator')) {
-            operatorHandler(e, expression);
+            const operator = e.target.textContent;
+            operatorHandler(operator, expression);
         }
 
         // Clears calculator.
@@ -28,17 +30,14 @@
         }
     });
 
-    const dotBtn = document.querySelector('.dot');
-    dotBtn.addEventListener('click', (e) => e.target.disabled = true);
-
     const backBtn = document.querySelector('.back');
-    backBtn.addEventListener('click', () => backHandler(expression));
+    backBtn.addEventListener('click', () => backspace(expression));
 
-    window.addEventListener('keydown', (e) => console.log(e.key))
+    window.addEventListener('keydown', (e) => keyHandler(e, expression));
 })();
 
 
-function operandHandler(e, expression) {
+function operandHandler(operand, expression) {
     // "Switches" the display input to the right operand.
     if ((expression.operator && expression.rightOperand === null)) {
         clearDisplay();
@@ -49,18 +48,21 @@ function operandHandler(e, expression) {
         }
     }
 
-    const digit = e.target.textContent;
-    const displayValue = updateDisplay(digit);
+    const displayValue = updateDisplay(operand);
 
     if (expression.operator) {
         expression.rightOperand = displayValue;
     } else {
         expression.leftOperand = displayValue;
     }
+
+    if (operand === '.') {
+        toggleDotButton(disabled=true);
+    }
 }
 
 
-function operatorHandler(e, expression) {
+function operatorHandler(operator, expression) {
     // Evaluates expression.
     if (expression.leftOperand !== null &&
         expression.operator !== null &&
@@ -72,21 +74,21 @@ function operatorHandler(e, expression) {
         expression.leftOperand = displayValue;
         expression.rightOperand = null;
 
-        if (e.target.matches('.equal')) {
+        if (operator === '=') {
             expression.operator = '=';
         }
 
-        switchOnDotButton();
+        toggleDotButton();
     }
 
-    if (!e.target.matches('.equal')) {
-        expression.operator = e.target.textContent;
-        switchOnDotButton();
+    if (operator !== '=' ) {
+        expression.operator = operator;
+        toggleDotButton();
     }
 }
 
 
-function backHandler(expression) {
+function backspace(expression) {
     let property;
 
     if (expression.rightOperand) {
@@ -113,6 +115,21 @@ function backHandler(expression) {
 }
 
 
+function keyHandler(e, expression) {
+    const operators = ['+', '-', '*', '/', '='];
+
+    if ((e.key >= '0' && e.key <= '9') || e.key === '.') {
+        operandHandler(e.key, expression);
+    } else if (operators.includes(e.key)) {
+        operatorHandler(e.key, expression);
+    } else if (e.key === 'Backspace') {
+        backspace(expression);
+    } else if (e.key ==='c' && e.ctrlKey) {
+        clearCalculator(expression);
+    }
+}
+
+
 function clearCalculator(expression) {
     expression.leftOperand = 0;
     expression.operator = null;
@@ -120,13 +137,13 @@ function clearCalculator(expression) {
 
     clearDisplay();
     updateDisplay(expression.leftOperand);
-    switchOnDotButton();
+    toggleDotButton();
 }
 
 
-function switchOnDotButton() {
+function toggleDotButton(disabled=false) {
     const dotBtn = document.querySelector('.dot')
-    dotBtn.disabled = false;
+    dotBtn.disabled = disabled;
 }
 
 
