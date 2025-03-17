@@ -71,8 +71,35 @@
         }
     });
 
-    const dotBtn = document.querySelector('.dot')
+    const dotBtn = document.querySelector('.dot');
     dotBtn.addEventListener('click', (e) => e.target.disabled = true);
+
+    const backBtn = document.querySelector('.back');
+    backBtn.addEventListener('click', () => {
+        let property;
+
+        if (expression.rightOperand) {
+            property = 'rightOperand';
+        } else if (expression.leftOperand) {
+            property = 'leftOperand';
+        } else {
+            return;
+        }
+
+        let value = expression[property];
+        let valueString = value.toString();
+        valueString = valueString.slice(0, -1);
+
+        if (!valueString) {
+            value = 0;
+        } else {
+            value = +valueString;
+        }
+
+        expression[property] = value;
+        clearDisplay();
+        updateDisplay(value);
+    });
 })();
 
 
