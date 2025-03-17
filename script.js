@@ -11,63 +11,20 @@
     const leftButtons = document.querySelector('.left-buttons');
     leftButtons.addEventListener('click', (e) => {
         if (e.target.matches('.operand')) {
-            // "Switches" the display input to the right operand.
-            if ((expression.operator && expression.rightOperand === null)) {
-                clearDisplay();
-
-                // Equal sign should not be saved in the expression.
-                if (expression.operator === '=') {
-                    expression.operator = null;
-                }
-            }
-
-            const digit = e.target.textContent;
-            const displayValue = updateDisplay(digit);
-
-            if (expression.operator) {
-                expression.rightOperand = displayValue;
-            } else {
-                expression.leftOperand = displayValue;
-            }
+            operandHandler(e, expression);
         }
     });
 
     const rightButtons = document.querySelector('.right-buttons');
     rightButtons.addEventListener('click', (e) => {
         if (e.target.matches('.operator')) {
-            // Evaluates expression.
-            if (expression.leftOperand !== null &&
-                expression.operator !== null &&
-                expression.rightOperand !== null) {
-                const result = operate(...Object.values(expression));
-                clearDisplay();
-                const displayValue = updateDisplay(result);
-
-                expression.leftOperand = displayValue;
-                expression.rightOperand = null;
-
-                if (e.target.matches('.equal')) {
-                    expression.operator = '=';
-                }
-
-                switchOnDotButton();
-            }
-
-            if (!e.target.matches('.equal')) {
-                expression.operator = e.target.textContent;
-                switchOnDotButton();
-            }
+            operatorHandler(e, expression);
         }
 
         // Clears calculator.
         if (e.target.matches('.clear')) {
-            expression.leftOperand = 0;
-            expression.operator = null;
-            expression.rightOperand = null;
+            clearCalculator(expression);
 
-            clearDisplay();
-            updateDisplay(expression.leftOperand);
-            switchOnDotButton();
         }
     });
 
@@ -75,32 +32,96 @@
     dotBtn.addEventListener('click', (e) => e.target.disabled = true);
 
     const backBtn = document.querySelector('.back');
-    backBtn.addEventListener('click', () => {
-        let property;
+    backBtn.addEventListener('click', () => backHandler(expression));
 
-        if (expression.rightOperand) {
-            property = 'rightOperand';
-        } else if (expression.leftOperand) {
-            property = 'leftOperand';
-        } else {
-            return;
-        }
-
-        let value = expression[property];
-        let valueString = value.toString();
-        valueString = valueString.slice(0, -1);
-
-        if (!valueString) {
-            value = 0;
-        } else {
-            value = +valueString;
-        }
-
-        expression[property] = value;
-        clearDisplay();
-        updateDisplay(value);
-    });
+    window.addEventListener('keydown', (e) => console.log(e.key))
 })();
+
+
+function operandHandler(e, expression) {
+    // "Switches" the display input to the right operand.
+    if ((expression.operator && expression.rightOperand === null)) {
+        clearDisplay();
+
+        // Equal sign should not be saved in the expression.
+        if (expression.operator === '=') {
+            expression.operator = null;
+        }
+    }
+
+    const digit = e.target.textContent;
+    const displayValue = updateDisplay(digit);
+
+    if (expression.operator) {
+        expression.rightOperand = displayValue;
+    } else {
+        expression.leftOperand = displayValue;
+    }
+}
+
+
+function operatorHandler(e, expression) {
+    // Evaluates expression.
+    if (expression.leftOperand !== null &&
+        expression.operator !== null &&
+        expression.rightOperand !== null) {
+        const result = operate(...Object.values(expression));
+        clearDisplay();
+        const displayValue = updateDisplay(result);
+
+        expression.leftOperand = displayValue;
+        expression.rightOperand = null;
+
+        if (e.target.matches('.equal')) {
+            expression.operator = '=';
+        }
+
+        switchOnDotButton();
+    }
+
+    if (!e.target.matches('.equal')) {
+        expression.operator = e.target.textContent;
+        switchOnDotButton();
+    }
+}
+
+
+function backHandler(expression) {
+    let property;
+
+    if (expression.rightOperand) {
+        property = 'rightOperand';
+    } else if (expression.leftOperand) {
+        property = 'leftOperand';
+    } else {
+        return;
+    }
+
+    let value = expression[property];
+    let valueString = value.toString();
+    valueString = valueString.slice(0, -1);
+
+    if (!valueString) {
+        value = 0;
+    } else {
+        value = +valueString;
+    }
+
+    expression[property] = value;
+    clearDisplay();
+    updateDisplay(value);
+}
+
+
+function clearCalculator(expression) {
+    expression.leftOperand = 0;
+    expression.operator = null;
+    expression.rightOperand = null;
+
+    clearDisplay();
+    updateDisplay(expression.leftOperand);
+    switchOnDotButton();
+}
 
 
 function switchOnDotButton() {
