@@ -78,12 +78,12 @@ function operatorHandler(operator, expression) {
             expression.operator = '=';
         }
 
-        toggleDotButton();
+        toggleDotButton(disabled=false);
     }
 
     if (operator !== '=' ) {
         expression.operator = operator;
-        toggleDotButton();
+        toggleDotButton(disabled=false);
     }
 }
 
@@ -116,12 +116,18 @@ function backspace(expression) {
 
 
 function keyHandler(e, expression) {
-    const operators = ['+', '-', '*', '/', '='];
+    const operators = {
+        '+': '+',
+        '-': '-',
+        '*': '*',
+        '/': '/',
+        'Enter': '=',
+    };
 
     if ((e.key >= '0' && e.key <= '9') || e.key === '.') {
         operandHandler(e.key, expression);
-    } else if (operators.includes(e.key)) {
-        operatorHandler(e.key, expression);
+    } else if (e.key in operators) {
+        operatorHandler(operators[e.key], expression);
     } else if (e.key === 'Backspace') {
         backspace(expression);
     } else if (e.key ==='c' && e.ctrlKey) {
@@ -137,7 +143,7 @@ function clearCalculator(expression) {
 
     clearDisplay();
     updateDisplay(expression.leftOperand);
-    toggleDotButton();
+    toggleDotButton(disabled=false);
 }
 
 
